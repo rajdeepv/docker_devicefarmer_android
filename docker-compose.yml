@@ -24,6 +24,7 @@ services:
     image: sorccu/adb:latest
     restart: unless-stopped
     privileged: true
+    command: "which adb"
     volumes:
       - /dev/bus/usb:/dev/bus/usb
   rethinkdb:
