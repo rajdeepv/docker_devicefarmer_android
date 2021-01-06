@@ -74,7 +74,7 @@ services:
   provider:
     image: devicefarmer/stf:latest
     restart: unless-stopped
-    command: stf provider --name ${STATION_NAME} --connect-sub tcp://dev-triproxy:7250 --connect-push tcp://dev-triproxy:7270 --storage-url http://${PUBLIC_IP}:8018/ --public-ip ${PUBLIC_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${PUBLIC_IP}:7080/d/nuc/<%= serial %>/<%= publicPort %>/" --adb-host ${PUBLIC_IP} --adb-port 9128 --min-port 7400 --max-port 7700 --allow-remote --screen-jpeg-quality 20
+    command: sleep 30 && stf provider --name ${STATION_NAME} --connect-sub tcp://dev-triproxy:7250 --connect-push tcp://dev-triproxy:7270 --storage-url http://${PUBLIC_IP}:8018/ --public-ip ${PUBLIC_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${PUBLIC_IP}:7080/d/nuc/<%= serial %>/<%= publicPort %>/" --adb-host ${PUBLIC_IP} --adb-port 9128 --min-port 7400 --max-port 7700 --allow-remote --screen-jpeg-quality 20
     ports:
       - 7400-7700:7400-7700
     depends_on:
