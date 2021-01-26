@@ -64,6 +64,10 @@ services:
     image: devicefarmer/stf:latest
     restart: unless-stopped
     command: stf triproxy dev --bind-pub "tcp://*:7250" --bind-dealer "tcp://*:7260" --bind-pull "tcp://*:7270"
+    ports:
+      - 7250:7250
+      - 7260:7260
+      - 7270:7270
   migrate:
     image: devicefarmer/stf:latest
     environment:
@@ -71,16 +75,28 @@ services:
     command: stf migrate
     depends_on:
       - rethinkdb
-  provider:
-    image: devicefarmer/stf:latest
-    restart: unless-stopped
-    command: stf provider --name ${STATION_NAME} --connect-sub tcp://dev-triproxy:7250 --connect-push tcp://dev-triproxy:7270 --storage-url http://${PUBLIC_IP}:8018/ --public-ip ${PUBLIC_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${PUBLIC_IP}:7080/d/nuc/<%= serial %>/<%= publicPort %>/" --adb-host ${PUBLIC_IP} --adb-port 9128 --min-port 7400 --max-port 7700 --allow-remote --screen-jpeg-quality 20
-    ports:
-      - 7400-7700:7400-7700
-    depends_on:
-      - dev-triproxy
-      - triproxy
-      - storage-temp
+
+#  macbook:
+#    image: devicefarmer/stf:latest
+#    restart: unless-stopped
+#    command: stf provider --name lol --connect-sub tcp://dev-triproxy:7250 --connect-push tcp://dev-triproxy:7270 --storage-url http://${PUBLIC_IP}:8018/ --public-ip ${PUBLIC_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${PUBLIC_IP}:7080/d/lol/<%= serial %>/<%= publicPort %>/" --adb-host 192.168.1.153 --adb-port 5037 --min-port 9000 --max-port 9300 --allow-remote
+#    ports:
+#      - 9000-9300:9000-9300
+#    depends_on:
+#      - dev-triproxy
+#      - triproxy
+#      - storage-temp
+
+#  provider:
+#    image: devicefarmer/stf:latest
+#    restart: unless-stopped
+#    command: stf provider --name ${STATION_NAME} --connect-sub tcp://dev-triproxy:7250 --connect-push tcp://dev-triproxy:7270 --storage-url http://${PUBLIC_IP}:8018/ --public-ip ${PUBLIC_IP} --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${PUBLIC_IP}:7080/d/nuc/<%= serial %>/<%= publicPort %>/" --adb-host ${PUBLIC_IP} --adb-port 5037 --min-port 7400 --max-port 7700 --allow-remote
+#    ports:
+#      - 7400-7700:7400-7700
+#    depends_on:
+#      - dev-triproxy
+#      - triproxy
+#      - storage-temp
   reaper:
     image: devicefarmer/stf:latest
     restart: unless-stopped
