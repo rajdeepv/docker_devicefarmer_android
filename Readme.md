@@ -14,7 +14,7 @@ Update the `.env` file accordingly
 Run `docker-compose up -d --build` 
 
 Create provider as
-`docker run --name docker_devicefarmer_android_provider --rm -d -p 7400-7700:7400-7700 devicefarmer/stf:latest stf provider --name shakti --connect-sub tcp://host.docker.internal:7250 --connect-push tcp://host.docker.internal:7270 --storage-url http://host.docker.internal:8018/ --public-ip 192.168.1.170 --heartbeat-interval 10000 --screen-ws-url-pattern "ws://192.168.1.170:7080/d/nuc/<%= serial %>/<%= publicPort %>/" --adb-host host.docker.internal --adb-port 5037 --min-port 7400 --max-port 7700 --allow-remote`
+`docker run --name docker_devicefarmer_android_provider --net=host --rm -p 7400-7700:7400-7700 devicefarmer/stf:latest stf provider --name shakti --connect-sub tcp://automation11.d4:7250 --connect-push tcp://automation11.d4:7270 --storage-url http://automation11.d4:8018/  --heartbeat-interval 10000 --screen-ws-url-pattern "ws://automation11.d4:7080/d/automation11/<%= serial %>/<%= publicPort %>/" --adb-host localhost --adb-port 9128 --min-port 7400 --max-port 7700 --screen-jpeg-quality 20 --allow-remote`
 
 Point your browser to the IP you chose,  
 login by providing any username and valid e-mail.
