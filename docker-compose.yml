@@ -26,26 +26,35 @@ services:
     restart: unless-stopped
     volumes:
       - rethinkdb:/data
-  app:
-    image: devicefarmer/stf:latest
-    restart: unless-stopped
-    environment:
-      - RETHINKDB_PORT_28015_TCP
-      - SECRET
-    command: stf app --auth-url http://${PUBLIC_IP}:7080/auth/mock/ --websocket-url ws://${PUBLIC_IP}:7080/ --port 3000
-    depends_on:
-      - rethinkdb
-      - auth
-      - websocket
+
+#  app:
+#    image: devicefarmer/stf:latest
+#    restart: unless-stopped
+#    environment:
+#      - RETHINKDB_PORT_28015_TCP
+#      - SECRET
+#    command: stf app --auth-url http://${PUBLIC_IP}:7080/auth/mock/ --websocket-url ws://${PUBLIC_IP}:7080/ --port 3000
+#    depends_on:
+#      - rethinkdb
+#      - auth
+#      - websocket
   auth:
     image: devicefarmer/stf:latest
     restart: unless-stopped
     environment:
       - RETHINKDB_PORT_28015_TCP
       - SECRET
-    command: stf auth-mock --app-url http://${PUBLIC_IP}:7080/ --port 3000
+      - OAUTH_AUTHORIZATION_URL=https://staffpass.com/oauth2/auth.phtml
+      - OAUTH_TOKEN_URL=https://staffpass.com/oauth2/token.phtml
+      - OAUTH_USERINFO_URL=https://staffpass.com/oauth2/base-info.phtml
+      - OAUTH_CLIENT_ID=devicefarmer
+      - OAUTH_CLIENT_SECRET=+yEeZd3YmyjviqUPv9n1LZ+mP3A2/+3YHfvCPQHxNtrpt4fUlxm7
+      - OAUTH_CALLBACK_URL=http://${PUBLIC_IP}:7080/auth/oauth/callback
+      - OAUTH_SCOPE="base-info"
+    command: stf auth-oauth2 --app-url http://${PUBLIC_IP}:7080/ --port 3000
     depends_on:
       - rethinkdb
+
   processor:
     image: devicefarmer/stf:latest
     restart: unless-stopped
@@ -72,6 +81,8 @@ services:
     image: devicefarmer/stf:latest
     environment:
       - RETHINKDB_PORT_28015_TCP
+      - STF_ADMIN_NAME=rajdeep.varma
+      - STF_ADMIN_EMAIL=rajdeep.varma@team.bumble.com
     command: stf migrate
     depends_on:
       - rethinkdb
