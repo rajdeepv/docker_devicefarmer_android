@@ -27,17 +27,28 @@ services:
     volumes:
       - rethinkdb:/data
 
-#  app:
-#    image: devicefarmer/stf:latest
-#    restart: unless-stopped
-#    environment:
-#      - RETHINKDB_PORT_28015_TCP
-#      - SECRET
-#    command: stf app --auth-url http://${PUBLIC_IP}:7080/auth/mock/ --websocket-url ws://${PUBLIC_IP}:7080/ --port 3000
-#    depends_on:
-#      - rethinkdb
-#      - auth
-#      - websocket
+  app:
+    image: devicefarmer/stf:latest
+    restart: unless-stopped
+    environment:
+      - RETHINKDB_PORT_28015_TCP
+      - SECRET
+    command: stf app --auth-url http://${PUBLIC_IP}:7080/auth/oauth/ --websocket-url ws://${PUBLIC_IP}:7080/ --port 3000
+    depends_on:
+      - rethinkdb
+      - auth
+      - websocket
+
+  # auth:
+  #   image: devicefarmer/stf:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     - RETHINKDB_PORT_28015_TCP
+  #     - SECRET
+  #   command: stf auth-mock --app-url http://${PUBLIC_IP}:7080/ --port 3000
+  #   depends_on:
+  #     - rethinkdb
+
   auth:
     image: devicefarmer/stf:latest
     restart: unless-stopped
