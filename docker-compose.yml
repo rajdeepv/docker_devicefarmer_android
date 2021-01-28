@@ -172,3 +172,16 @@ services:
       - migrate
       - rethinkdb
       - triproxy
+
+  group_engine:
+    image: devicefarmer/stf:latest
+    restart: unless-stopped
+    environment:
+      - RETHINKDB_PORT_28015_TCP
+      - SECRET
+    command: stf groups-engine --connect-sub tcp://triproxy:7150 --connect-push tcp://triproxy:7170 --connect-sub-dev tcp://dev-triproxy:7250 --connect-push-dev tcp://dev-triproxy:7270
+    depends_on:
+      - migrate
+      - rethinkdb
+      - triproxy
+      - dev-triproxy
