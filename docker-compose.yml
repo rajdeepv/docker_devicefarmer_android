@@ -71,6 +71,8 @@ services:
     restart: unless-stopped
     environment:
       - RETHINKDB_PORT_28015_TCP
+      - ZMQ_TCP_KEEPALIVE=1
+      - ZMQ_TCP_KEEPALIVE_IDLE=300
     command: stf processor --connect-app-dealer tcp://triproxy:7160 --connect-dev-dealer tcp://dev-triproxy:7260
     depends_on:
       - rethinkdb
@@ -80,6 +82,9 @@ services:
     image: devicefarmer/stf:latest
     restart: unless-stopped
     command: stf triproxy app --bind-pub "tcp://*:7150" --bind-dealer "tcp://*:7160" --bind-pull "tcp://*:7170"
+    environment:
+      - ZMQ_TCP_KEEPALIVE=1
+      - ZMQ_TCP_KEEPALIVE_IDLE=300
   dev-triproxy:
     image: devicefarmer/stf:latest
     restart: unless-stopped
@@ -88,6 +93,9 @@ services:
       - 7250:7250
       - 7260:7260
       - 7270:7270
+    environment:
+      - ZMQ_TCP_KEEPALIVE=1
+      - ZMQ_TCP_KEEPALIVE_IDLE=300
   migrate:
     image: devicefarmer/stf:latest
     environment:
@@ -154,6 +162,8 @@ services:
     environment:
       - SECRET
       - RETHINKDB_PORT_28015_TCP
+      - ZMQ_TCP_KEEPALIVE=1
+      - ZMQ_TCP_KEEPALIVE_IDLE=300
     command: stf websocket --port 3000 --storage-url http://${PUBLIC_IP}:7080/ --connect-sub tcp://triproxy:7150 --connect-push tcp://triproxy:7170
     depends_on:
       - migrate
