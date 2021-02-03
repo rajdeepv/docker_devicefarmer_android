@@ -27,7 +27,7 @@ services:
     volumes:
       - rethinkdb:/data
     ports:
-    - 7080:8080
+      - 7080:8080
 
   app:
     image: devicefarmer/stf:latest
